@@ -12,7 +12,6 @@ def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
@@ -20,24 +19,8 @@ if __name__ == '__main__':
 data = pd.read_csv('fire_damage_data.csv')
 data.plot(kind='scatter', x='Distance', y='Fire Damage')
 
-# plt.show()
-
 distance = pd.DataFrame(data['Distance'])
 damage = pd.DataFrame(data['Fire Damage'])
-
-lm = linear_model.LinearRegression()
-SLR_model = lm.fit(distance, damage)
-
-future_distance = ([4])
-future_distance = pd.DataFrame(future_distance)
-predict_damage = SLR_model.predict(future_distance)
-
-X = ([2.5, 3, 5.2])
-X = pd.DataFrame(X)
-Y = SLR_model.predict(X)
-Y = pd.DataFrame(Y)
-df = pd.concat([X, Y], axis=1, keys=['future_distance', 'predict_damage'])
-df
 
 # calculations
 n = len(distance)
@@ -76,16 +59,25 @@ e_hat = [0] * n
 for i in range(0, n):
     e_hat[i] = y_damage[i] - y_hat[i]
 
+SEE = 0
+for i in e_hat:
+    SEE += i*i
+
+noise_var = SEE/(n-2)
+B1_hat_var = noise_var*noise_var/S_xx
+B0_hat_var = noise_var*noise_var*(1/n + x_bar/S_xx)
+
 for i in range(0, n):
     point1 = [x_distance[i], y_hat[i]]
     point2 = [x_distance[i], e_hat[i] + y_hat[i]]
     plt.plot([point1[0], point2[0]], [point1[1], point2[1]], color='blue')
 
 # SLR line
-plt.plot(distance, SLR_model.predict(distance), color='red', linewidth=3)
+# plt.plot(distance, SLR_model.predict(distance), color='red', linewidth=3)
 plt.plot(x_distance, y_hat, color='blue', linewidth=1)
 # plt.scatter(x_distance, e_hat, color='black')
 # plt.scatter(future_distance, predict_damage, color='black')
+
 
 # plt.plot(X, Y, color='blue', linewidth=4)
 plt.show()
